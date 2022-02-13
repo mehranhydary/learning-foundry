@@ -7,7 +7,15 @@ import "../Bank.sol";
 contract BankTest is DSTest {
     // Creating a Bank variable to store Bank smart contract
     Bank myBank;
+    // Necessary to test with Foundry and Forge because
+    // we are using non-EOAs (calling function in a smart contract)
 
+    // Figure out what to put here to make testWithdraw not fail
+    receive() external payable {}
+    
+    // Figure out what to put here to make testWithdraw not fail
+    fallback() external payable {}
+  
     function setUp() public {
         // Initializing the Bank smart contract here and storing
         myBank = new Bank();
@@ -29,13 +37,12 @@ contract BankTest is DSTest {
         assertEq(x % 5, myBank.getBalance());
     }
 
-    // failing : T_T
+    // Failing : T_T
 
-    function testOneEtherWithdraw() public {
+    function testWithdraw() public {
         // Should be the same account
         myBank.deposit{value: 0.5 ether}();
         myBank.withdraw(0.5 ether);
-        
         assertEq(0, myBank.getBalance());
     }
 }
